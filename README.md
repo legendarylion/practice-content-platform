@@ -1,36 +1,71 @@
-# Psychology Today Profile Optimization
+# Practice Content Platform
 
-A repeatable service for optimizing therapist and counselor profiles on the
-Psychology Today directory. The goal of each engagement is to improve three
-things at once without erasing the clinician's voice:
+A repeatable system for turning one client intake into every piece of
+client-facing copy a therapy practice needs: directory profiles (Psychology
+Today, Zencare, Zocdoc, Google Business Profile, the Private Practice
+Directory) and website content (homepage, approach page, clinician bios,
+FAQ). One dataset, one positioning document, many deliverables - so a
+practice's voice, specialties, and trust signals stay consistent everywhere
+a prospective client encounters them.
 
-1. **Search visibility** - appearing in the right directory filters and
+This repo grew out of a Psychology Today-only tool (see
+`docs/sessions/2026-06-15-1244-pt-profile-optimizer-buildout.md` for that
+history); the PT module is still the most complete one and the reference
+pattern every other module follows.
+
+## How it fits together
+
+```
+_ref/intake-questionnaire.md   <- raw client answers (practice-wide, multi-platform)
+        |
+        v
+_templates/icp-profile-template.md   <- one ICP/positioning doc per client,
+                                         built once, reused by every deliverable
+        |
+        v
+deliverables/<module>/          <- one folder per output type:
+  field-map.md                     maps ICP/intake answers -> that platform's fields
+  limits.json                      that platform's character limits (if any) - single
+                                    source of truth, sourced and dated
+  template.md                      blank, paste-ready deliverable template
+```
+
+Every engagement lives in `clients/<slug>/`, with the client's `intake.md`
+and `icp.md` at the top level and one subfolder under `deliverables/` per
+platform being optimized for that client.
+
+## The three goals, on every surface
+
+Whether it's a directory profile field or a website page, every deliverable
+is optimizing for the same three things without erasing the clinician's
+voice:
+
+1. **Search visibility** - appearing in the right filters/keywords and
    ranking for the terms real seekers type.
-2. **First-impression conversion** - making the search-result preview and the
-   top of the profile earn the click and the inquiry.
-3. **Trust consistency** - removing the small contradictions (mismatched
-   consult lengths, typos, unexplained options) that quietly erode confidence
-   at the moment someone decides to reach out.
+2. **First-impression conversion** - making the preview text and the top of
+   the page/profile earn the click and the inquiry.
+3. **Trust consistency** - the same credentials, consult length, and voice
+   everywhere, so nothing quietly contradicts itself between the website and
+   a directory listing.
 
-## What an engagement produces
+## Modules (deliverable types)
 
-A complete, paste-ready optimization package delivered as a single document:
+| Module | Status |
+|---|---|
+| `deliverables/psychology-today/` | Complete - limits confirmed, field map, template, full playbook. |
+| `deliverables/website-content/` | New - no platform character caps, so it's structural (page/section) rather than field-by-field. Same ICP, same voice rules. |
+| `deliverables/google-business-profile/` | New - limits confirmed (description, Posts). |
+| `deliverables/zencare/` | Stub - field map pending; **character limits unverified**, confirm in the provider portal before first use. |
+| `deliverables/zocdoc/` | Stub - field map pending; **character limits unverified**, confirm in the provider dashboard before first use. |
+| `deliverables/private-practice-directory/` | Stub - internal MHM product; schema/limits owned by whoever runs that product, not a public source. |
 
-- A short list of key findings (positioning, specialty selection, language,
-  trust gaps).
-- A rewritten three-part personal statement.
-- Rewrites of the supporting note fields (Specialties/Expertise, Treatment
-  Approach, Qualifications).
-- A punch list of smaller fixes (typos, consult-length standardization,
-  specialty swaps, telehealth settings).
-- Video and implementation guidance.
+Adding a new module means adding a new `deliverables/<name>/` folder in the
+same shape - `field-map.md`, `limits.json` if the platform has real limits,
+and `template.md`. `tools/check_limits.py` and `tools/build_docx.py` are
+shared across every module; they infer which `limits.json` applies from the
+deliverable file's parent folder name.
 
-Every block of client-facing copy must fit inside Psychology Today's character
-limits **before** delivery. Exceeding a limit causes the platform to truncate
-the text mid-sentence on the live profile, which is the exact problem this
-project exists to prevent.
-
-## Psychology Today character limits
+## Psychology Today character limits (reference)
 
 Source: https://reframepractice.com/answers/psychology-today/best-psychology-today-profiles
 (confirmed current as of the April 2026 version of that guide).
@@ -65,34 +100,39 @@ Source: https://reframepractice.com/answers/psychology-today/best-psychology-tod
 
 ### Drafting rule of thumb
 
-The guide recommends writing to roughly **80% of each limit** so copy does not
-truncate on smaller screens. Treat the numbers above as hard ceilings and the
-80% figure as the comfort target. `limits.json` is the single source of truth
-for the numbers; the checker reads from it, so update it there if PT changes a
-limit. Never eyeball length: run the checker before delivery.
+Write to roughly **80% of each limit** so copy does not truncate on smaller
+screens. Treat the numbers above as hard ceilings and the 80% figure as the
+comfort target. `deliverables/psychology-today/limits.json` is the single
+source of truth for the numbers; the checker reads from it, so update it
+there if PT changes a limit. Never eyeball length: run the checker before
+delivery. Each other module keeps its own `limits.json` the same way.
 
 ## Running an engagement
 
 See `PROCESS.md` for the full playbook. In short:
 
-1. Copy `_templates/optimized-profile-template.md` into the client folder.
-2. Draft each block (refine an existing profile, or build from the intake
-   questionnaire using `questionnaire-to-pt-field-map.md`).
+1. Build (or update) the client's ICP: copy
+   `_templates/icp-profile-template.md` into `clients/<slug>/icp.md` and fill
+   it from the intake questionnaire (or an existing profile/website, in
+   refine mode).
+2. For each platform/page being optimized, copy that module's
+   `deliverables/<module>/template.md` into
+   `clients/<slug>/deliverables/<module>/` and draft the copy from the ICP.
 3. Verify and set counts:
    ```
-   python3 tools/check_limits.py clients/<slug>-<date>/optimized-profile.md --update
-   python3 tools/check_limits.py clients/<slug>-<date>/optimized-profile.md
+   python3 tools/check_limits.py clients/<slug>/deliverables/<module>/<file>.md --update
+   python3 tools/check_limits.py clients/<slug>/deliverables/<module>/<file>.md
    ```
    The second run must report PASSED. It also blocks em/en dashes.
 4. Generate the client document and deliver:
    ```
-   python3 tools/build_docx.py clients/<slug>-<date>/optimized-profile.md
+   python3 tools/build_docx.py clients/<slug>/deliverables/<module>/<file>.md
    ```
-   This writes a namespaced, datetimestamped `.docx` into the client folder
-   (e.g. `michael-lydon-optimized-profile-2026-06-15-123557.docx`) so revision
-   runs never overwrite an earlier delivery. Upload it to Google Drive, open it
-   as a Google Doc, and share the link. Each copy block is a boxed table the
-   client can copy cleanly.
+   This writes a namespaced, datetimestamped `.docx` into the deliverable
+   folder (e.g. `michael-lydon-psychology-today-optimized-2026-09-03-113341.docx`)
+   so revision runs never overwrite an earlier delivery. Upload it to Google
+   Drive, open it as a Google Doc, and share the link. Each copy block is a
+   boxed table the client can copy cleanly.
 
 ## Setup
 
@@ -102,14 +142,21 @@ pip install -r requirements.txt
 
 ## Repo layout
 
-- `limits.json` - single source of truth for PT field character limits.
-- `tools/check_limits.py` - verifies a deliverable fits limits and is dash-clean.
-- `tools/build_docx.py` - builds the client-facing boxed `.docx` from the `.md`.
+- `_ref/` - shared source material (the practice-wide intake questionnaire).
+- `_templates/icp-profile-template.md` - blank ICP/positioning template, the
+  shared foundation for every deliverable.
+- `deliverables/<module>/` - one per output type (see table above): that
+  platform's `field-map.md`, `limits.json` (if it has real limits), and
+  `template.md`.
+- `tools/check_limits.py` - verifies a deliverable fits its module's limits
+  (or lints dash-cleanliness/counts only, for modules with no hard caps).
+- `tools/build_docx.py` - builds the client-facing boxed `.docx` from a
+  module's `.md`, for any module.
 - `requirements.txt` - Python dependencies (`python-docx`).
-- `PROCESS.md` - the optimization playbook (two input modes, steps, hard rules).
-- `questionnaire-to-pt-field-map.md` - maps intake answers to PT fields.
-- `_templates/` - blank, paste-ready deliverable template.
-- `_ref/` - shared source material (the intake questionnaire).
-- `clients/<slug>-<YYYY-MM-DD>/` - per engagement: `source/` inputs, the
-  `optimized-profile.md` working file, and one or more namespaced
-  `<slug>-optimized-profile-<datetimestamp>.docx` deliverables (git-ignored).
+- `PROCESS.md` - the general playbook: build the ICP first, then run any
+  number of deliverable modules from it.
+- `clients/<slug>/` - per client: `intake.md`, `icp.md`, and
+  `deliverables/<module>/` (each with its own `source/` inputs, working
+  `.md`, and namespaced `.docx` deliverables, git-ignored) per platform/page
+  set optimized for that client.
+- `docs/sessions/` - dated session summaries (project history).

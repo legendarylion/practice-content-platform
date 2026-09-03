@@ -1,23 +1,25 @@
 #!/usr/bin/env python3
 """
-build_docx.py - turn a validated optimized-profile.md into a client-friendly .docx.
+build_docx.py - turn a validated deliverable .md into a client-friendly .docx.
 
-The .docx puts every PT copy block in its own bordered, shaded box, with the
-field name, limit, and live character count as a caption ABOVE the box. The
-client clicks inside a box, selects all, and pastes into the matching
-Psychology Today field, with no risk of grabbing a label or a count.
+Works for any deliverable module (Psychology Today, other directory profiles,
+website content, ...). The .docx puts every copy block in its own bordered,
+shaded box, with the field name, limit (if the field has one), and live
+character count as a caption ABOVE the box. The client clicks inside a box,
+selects all, and pastes into the matching field, with no risk of grabbing a
+label or a count.
 
 Delivery: upload the .docx to Google Drive, open it as a Google Doc, share the
 link. The boxes survive the conversion as tables.
 
 Usage:
-    python3 tools/build_docx.py clients/<slug>-<date>/optimized-profile.md
+    python3 tools/build_docx.py clients/<slug>/deliverables/<platform>/<file>.md
     python3 tools/build_docx.py <file> -o some/output.docx
     python3 tools/build_docx.py <file> --force   # build even if a block is over limit
 
-The build refuses to run if any block is over its limit or contains an em/en
-dash, unless --force is given. Counts in the .docx are recomputed from the copy,
-so they are always truthful regardless of what the .md claims.
+The build refuses to run if any block declares a limit it exceeds, or contains
+an em/en dash, unless --force is given. Counts in the .docx are recomputed
+from the copy, so they are always truthful regardless of what the .md claims.
 """
 
 import argparse
@@ -169,7 +171,9 @@ def caption(doc, block):
     p.paragraph_format.space_after = Pt(2)
     field = f'Field: "{block["label"]}"' if block["label"] else "Field"
     over = block["limit"] and block["count"] > block["limit"]
-    run = p.add_run(f'{field}   |   {block["count"]} / {block["limit"]} characters')
+    limit_disp = block["limit"] if block["limit"] is not None else "no cap"
+    sep = "/" if block["limit"] is not None else "-"
+    run = p.add_run(f'{field}   |   {block["count"]} {sep} {limit_disp} characters')
     run.bold = True
     run.font.size = Pt(9)
     run.font.color.rgb = OVER_COLOR if over else MUTED
@@ -201,7 +205,7 @@ def build(md_path, out_path, force=False):
     doc.add_paragraph()  # top margin breathing room
     instr = ("How to use this document: each block of copy sits in a shaded box. "
              "Click inside a box, select all of the text in it, and paste it into the "
-             "matching Psychology Today field. Copy only what is inside the box; the "
+             "matching field. Copy only what is inside the box; the "
              "labels and character counts above each box are for reference and should "
              "not be pasted.")
 
@@ -240,14 +244,23 @@ def build(md_path, out_path, force=False):
 
 
 def default_output(md_path):
-    """Deliverable lands in the client folder, namespaced with the client slug
-    and a datetimestamp so revision runs never overwrite an earlier delivery."""
+    """Deliverable lands in the client's module folder, namespaced with the
+    client slug and platform/module and a datetimestamp so revision runs never
+    overwrite an earlier delivery.
+
+    Expects the convention clients/<slug>/deliverables/<platform>/<file>.md.
+    Falls back to a slug-only name if a file doesn't follow that layout (e.g.
+    building straight from a deliverables/<platform>/template.md)."""
     folder = os.path.dirname(os.path.abspath(md_path))
-    base = os.path.basename(folder)
-    # client folders are <slug>-<YYYY-MM-DD>; strip the trailing date to get the slug
-    m = re.match(r"^(.*)-\d{4}-\d{2}-\d{2}$", base)
-    slug = m.group(1) if m else base
+    platform = os.path.basename(folder)
+    parts = folder.split(os.sep)
     stamp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
+    if "clients" in parts:
+        slug = parts[parts.index("clients") + 1]
+        return os.path.join(folder, f"{slug}-{platform}-optimized-{stamp}.docx")
+    # legacy fallback: client folders used to be <slug>-<YYYY-MM-DD>
+    m = re.match(r"^(.*)-\d{4}-\d{2}-\d{2}$", platform)
+    slug = m.group(1) if m else platform
     return os.path.join(folder, f"{slug}-optimized-profile-{stamp}.docx")
 
 

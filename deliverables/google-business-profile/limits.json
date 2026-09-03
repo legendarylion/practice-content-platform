@@ -1,0 +1,18 @@
+{
+  "source": "https://support.google.com/business/answer/3038177 (description limit); Google's 2018 change to the Posts character cap, corroborated by multiple current GBP optimization guides",
+  "confirmed": "September 2026",
+  "fields": [
+    { "key": "description", "label": "Business description", "section": "From the business", "limit": 750,
+      "note": "Only the first ~250 characters show before 'Read more' truncates it in most surfaces - lead with the strongest hook and primary specialty within that window. Confirmed live at 742/750 on the Michael Lydon 2026-06-26 engagement (see _local/)." },
+    { "key": "post_update",  "label": "Update post",          "section": "Posts",              "limit": 1500,
+      "note": "Only the first ~100 characters show before the preview truncates - keep the lead sentence self-contained." },
+    { "key": "service_name",        "label": "Service name",        "section": "Services", "limit": 58,
+      "note": "One per service/modality offered - list them discretely to surface for more specific searches. Confirmed live on the Michael Lydon 2026-06-26 engagement." },
+    { "key": "service_description", "label": "Service description", "section": "Services", "limit": 300,
+      "note": "Confirmed live on the Michael Lydon 2026-06-26 engagement." }
+  ],
+  "unverified_no_hard_limit": [
+    { "key": "qa_answer", "label": "Q&A answer", "section": "Questions & Answers",
+      "note": "Google has not published an official cap; historical reports range from ~440 to several thousand characters. Not enforced here - write for a 150-500 character answer regardless, since that's what users actually read." }
+  ]
+}

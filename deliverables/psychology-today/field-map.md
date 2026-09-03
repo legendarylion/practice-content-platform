@@ -21,6 +21,15 @@ Today subset.
 | Intro to new clients | "Intro to new clients" | 140 | 3.2 reassurance language; 2.3 words clients use; CTA preference from 3.3 |
 | Tagline | "Tagline" | 160 | 2.3 differentiation in one line; 3-5 words clients use (2.3) |
 
+## Open discrepancy to verify
+
+`limits.json` cites 270 characters for the search-result preview (source:
+reframepractice.com, April 2026). The Michael Lydon PT deliverable
+(`_local/Psychology_Today_Optimization_Michael_Lydon.docx`) instead says
+"roughly the first 150 characters." Both can't be exactly right - confirm
+against a live PT profile's actual search-result truncation point before the
+next engagement and update whichever source is stale.
+
 ## Cross-checks the map encodes
 
 - **Licensure (2.5).** The questionnaire captures license type, number, state,
