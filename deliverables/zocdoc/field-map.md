@@ -1,7 +1,8 @@
 # ICP/Questionnaire to Zocdoc Field Map
 
 Zocdoc does not publish character limits for its text fields (confirmed on
-the Michael Lydon 2026-06-26 engagement - see `_local/` and `README.md` in
+the Michael Lydon 2026-06-26 engagement - see
+`clients/michael-lydon/deliverables/zocdoc/source/` and `README.md` in
 this folder). Counts below are for scannability, not enforcement; there is
 no `limits.json` here for that reason. **Confirm directly in the provider
 dashboard if a hard limit ever needs verifying.**

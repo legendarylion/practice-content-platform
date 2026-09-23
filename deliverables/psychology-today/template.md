@@ -93,4 +93,6 @@ PASTE COPY HERE as a single unwrapped paragraph.
 Delete any optional block above that this engagement does not use. After
 filling the copy, run:  python3 tools/check_limits.py <this file> --update
 to set the counts, then run it again without --update to confirm everything
-passes. House style: plain hyphens only, no em or en dashes.
+passes. House style: plain hyphens only, no em or en dashes, and avoid
+AI-isms generally (see PROCESS.md Hard rules) - clear, direct, and warm,
+in the clinician's own voice.

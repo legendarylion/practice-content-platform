@@ -19,10 +19,11 @@ directory modules. Positioning source is the same ICP
 
 ## Reference example
 
-`_local/Realization Process - Michael Lydon - Home Page Conent (Client
-Written, MHM Reviewed).docx` (repo root, git-ignored, not part of this
-module's tracked templates) is a real, delivered homepage built outside this
-tool's template format. It's a useful quality/tone bar - notably its build
+`clients/michael-lydon/deliverables/website-content/source/Realization
+Process - Michael Lydon - Home Page Content (Client Written, MHM
+Reviewed).docx` (git-ignored like every `.docx` in this repo, not part of
+this module's tracked templates) is a real, delivered homepage built outside
+this tool's template format. It's a useful quality/tone bar - notably its build
 notes call out putting zero SEO keywords in the H1/subhead on purpose,
 carrying them in the meta description and body copy instead, since the H1 is
 "the billboard, not the search-engine copy." Worth reading before drafting a

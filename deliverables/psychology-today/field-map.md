@@ -25,8 +25,8 @@ Today subset.
 
 `limits.json` cites 270 characters for the search-result preview (source:
 reframepractice.com, April 2026). The Michael Lydon PT deliverable
-(`_local/Psychology_Today_Optimization_Michael_Lydon.docx`) instead says
-"roughly the first 150 characters." Both can't be exactly right - confirm
+(`clients/michael-lydon/deliverables/psychology-today/source/Psychology_Today_Optimization_Michael_Lydon.docx`)
+instead says "roughly the first 150 characters." Both can't be exactly right - confirm
 against a live PT profile's actual search-result truncation point before the
 next engagement and update whichever source is stale.
 

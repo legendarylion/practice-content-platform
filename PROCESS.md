@@ -110,6 +110,17 @@ share the same ICP.
   The checker is the gate; do not deliver on a FAIL.
 - No em dashes or en dashes anywhere in client-facing copy, on any surface.
   Plain hyphens only.
+- Avoid AI-isms generally, not just dashes. Watch for: rule-of-three lists
+  used as a crutch ("clear, direct, and warm"-style triplets stacked
+  reflexively); "it's not just X, it's Y" and other false-contrast framing;
+  throat-clearing openers ("In today's world...", "Let's face it...");
+  corporate-inspirational verbs (unlock, elevate, dive into, embark, harness,
+  navigate, foster, seamless, robust, holistic, transformative journey);
+  hedge-stacking ("might potentially help provide"); and over-symmetrical
+  sentence pairs that sound generated rather than spoken. Read every
+  deliverable back and ask whether a clinician would actually say it out
+  loud. Copy should be clear, direct, and warm, in the client's own voice,
+  not polished into sounding like everyone else's.
 - Each module's `limits.json` is the single source of truth for that
   platform's limits. If a platform changes a limit, update that module's
   `limits.json` and re-run the checker on past deliverables; do not hardcode

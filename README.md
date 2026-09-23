@@ -123,7 +123,9 @@ See `PROCESS.md` for the full playbook. In short:
    python3 tools/check_limits.py clients/<slug>/deliverables/<module>/<file>.md --update
    python3 tools/check_limits.py clients/<slug>/deliverables/<module>/<file>.md
    ```
-   The second run must report PASSED. It also blocks em/en dashes.
+   The second run must report PASSED. It also blocks em/en dashes. Beyond
+   what the checker enforces, house style also rules out AI-isms generally
+   (see `PROCESS.md` Hard rules) - clear, direct, and warm, not generated.
 4. Generate the client document and deliver:
    ```
    python3 tools/build_docx.py clients/<slug>/deliverables/<module>/<file>.md

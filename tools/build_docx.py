@@ -44,6 +44,31 @@ BOX_FILL = "F2F6FB"     # light blue-gray for copy boxes
 OVER_COLOR = RGBColor(0xC0, 0x00, 0x00)
 MUTED = RGBColor(0x60, 0x60, 0x60)
 
+BRAND_FONT = "Poppins"  # brand font; a built-in Google Font, so it renders
+                        # correctly once the .docx is opened as a Google Doc
+                        # (the standard delivery path). Not embedded here -
+                        # desktop Word without Poppins installed just falls
+                        # back to a substitute font, no error either way.
+
+
+def set_style_font(style, font_name):
+    style.font.name = font_name
+    rpr = style.element.get_or_add_rPr()
+    rFonts = rpr.find(qn("w:rFonts"))
+    if rFonts is None:
+        rFonts = OxmlElement("w:rFonts")
+        rpr.insert(0, rFonts)
+    rFonts.set(qn("w:ascii"), font_name)
+    rFonts.set(qn("w:hAnsi"), font_name)
+    rFonts.set(qn("w:eastAsia"), font_name)
+    rFonts.set(qn("w:cs"), font_name)
+
+
+def apply_brand_font(doc):
+    for style_name in ("Normal", "Title", "Heading 1", "Heading 2"):
+        if style_name in doc.styles:
+            set_style_font(doc.styles[style_name], BRAND_FONT)
+
 
 def parse_doc(text):
     """Walk the deliverable into an ordered list of (kind, data) elements."""
@@ -202,6 +227,7 @@ def build(md_path, out_path, force=False):
             print("  - " + p)
 
     doc = Document()
+    apply_brand_font(doc)
     doc.add_paragraph()  # top margin breathing room
     instr = ("How to use this document: each block of copy sits in a shaded box. "
              "Click inside a box, select all of the text in it, and paste it into the "

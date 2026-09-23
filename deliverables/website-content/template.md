@@ -80,5 +80,7 @@ PASTE COPY HERE as a single unwrapped paragraph.
 ====================================================================
 Fill each block, then run:  python3 tools/check_limits.py <this file> --update
 to set the counts, then run it again without --update to confirm dash-clean.
-House style: plain hyphens only, no em or en dashes. Apply the ICP's
+House style: plain hyphens only, no em or en dashes, and avoid AI-isms
+generally (see PROCESS.md Hard rules) - copy should read clear, direct, and
+warm, like the clinician actually talking, not generated. Apply the ICP's
 words-to-avoid list here exactly as on every other deliverable.
